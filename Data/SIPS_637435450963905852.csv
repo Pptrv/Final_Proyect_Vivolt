@@ -1,16 +1,16 @@
-CUPS;;ES0021000005204736CV;;;;;
-;;;;;;;
-Tarifa;;3.0A;;;;;
-Potencia Contratada (kWh);;P1;15,001;;;;
-Potencia Contratada (kWh);;P2;15,001;;;;
-Potencia Contratada (kWh);;P3;15,001;;;;
-Potencia Contratada (kWh);;P4;0;;;;
-Potencia Contratada (kWh);;P5;0;;;;
-Potencia Contratada (kWh);;P6;0;;;;
-Tension;;3X400/230;;;;;
-Fecha ultima lectura;;07/10/2020;;;;;
-;;;;;;;
-Lecturas de activa(kWh):;;;;;;;
+CUPS;;ES0021000005204736CV
+
+Tarifa;;3.0A
+Potencia Contratada (kWh);;P1;15,001
+Potencia Contratada (kWh);;P2;15,001
+Potencia Contratada (kWh);;P3;15,001
+Potencia Contratada (kWh);;P4;0
+Potencia Contratada (kWh);;P5;0
+Potencia Contratada (kWh);;P6;0
+Tension;;3X400/230
+Fecha ultima lectura;;07/10/2020
+
+Lecturas de activa(kWh):
 Periodo;;Activa P1;Activa P2;Activa P3;Activa P4;Activa P5;Activa P6
 30/09/2020-07/10/2020;;90;103;12;3;15;5
 31/08/2020-30/09/2020;;237;308;56;9;28;19
@@ -48,8 +48,8 @@ Periodo;;Activa P1;Activa P2;Activa P3;Activa P4;Activa P5;Activa P6
 09/01/2018-09/02/2018;;231;1776;108;22;59;39
 09/12/2017-09/01/2018;;155;1217;109;28;78;51
 08/10/2017-09/12/2017;;370;1689;199;56;161;101
-;;;;;;;
-Lecturas de reactiva(kVArh):;;;;;;;
+
+Lecturas de reactiva(kVArh):
 Periodo;;Reactiva P1;Reactiva P2;Reactiva P3;Reactiva P4;Reactiva P5;Reactiva P6
 30/09/2020-07/10/2020;;0;0;0;0;0;0
 31/08/2020-30/09/2020;;0;0;0;0;0;0
@@ -87,8 +87,8 @@ Periodo;;Reactiva P1;Reactiva P2;Reactiva P3;Reactiva P4;Reactiva P5;Reactiva P6
 09/01/2018-09/02/2018;;0;0;0;0;0;0
 09/12/2017-09/01/2018;;0;0;0;0;0;0
 08/10/2017-09/12/2017;;0;0;0;0;0;0
-;;;;;;;
-Lecturas de maximetro(kW):;;;;;;;
+
+Lecturas de maximetro(kW):
 Periodo;;Potencia P1;Potencia P2;Potencia P3;Potencia P4;Potencia P5;Potencia P6
 30/09/2020-07/10/2020;;5,94;5,81;2,61;0,45;0,48;0,51
 31/08/2020-30/09/2020;;5,94;5,81;2,61;0,45;0,48;0,51
@@ -126,12 +126,12 @@ Periodo;;Potencia P1;Potencia P2;Potencia P3;Potencia P4;Potencia P5;Potencia P6
 09/01/2018-09/02/2018;;9,92;11,01;1,74;1,53;1,37;0,8
 09/12/2017-09/01/2018;;10,66;10,84;1,77;1,81;1,73;0,73
 08/10/2017-09/12/2017;;8,12;10,69;1,64;3,14;7,97;0,79
-;;;;;;;
-Consumo anual estimado(kWh):;;;;;;;
-Periodo;;Total;;;;;
-P1;;2550;;;;;
-P2;;7825;;;;;
-P3;;738;;;;;
-P4;;156;;;;;
-P5;;457;;;;;
-P6;;274;;;;;
+
+Consumo anual estimado(kWh):
+Periodo;;Total
+P1;;2550
+P2;;7825
+P3;;738
+P4;;156
+P5;;457
+P6;;274
