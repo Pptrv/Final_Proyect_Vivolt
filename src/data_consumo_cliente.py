@@ -30,8 +30,24 @@ def download_consumo(login_data, client_cups):
     sleep(0.5)
     driver.find_element_by_xpath('//*[@id="pcoded"]/div[2]/div/div/div/div/div/div/div/app-sips/div[2]/div/form/div[2]/div/div[3]/button').click()
 
-# Funcion para guardar el consumo del cliente
+# Funcion para importar el consumo del cliente en df
+def import_ConsumoCliente():
+    list_of_files = glob.glob('/Users/pptrv/Downloads/*.csv')
+    latest_file = max(list_of_files, key=os.path.getctime)
+    data = pd.read_csv(latest_file, sep=";;", error_bad_lines = False)
+    return(data)
+
+# Funcion para guardar el consumo del cliente en 2 df
+def saving_ConsumoCliente():
+    df_sips = import_ConsumoCliente()
+    df_sips_potencia = df_sips.iloc[1:7]
+    df_sips_potencia.columns = ['a', 'b'] 
+    df_sips_potencia[['Potencia','kWp']] = df_sips_potencia['b'].str.split(";",expand=True)
+    df_sips_energia = df_sips.tail(6)
+    return(df_sips_energia.to_csv("../Data/csv/bd_consumo_energia_cliente.csv", index = False), df_sips_potencia.to_csv("../Data/csv/bd_consumo_potencia_cliente.csv", index = False) )
+    
 
 # Función para llamar a BD_Consumo
 def bd_consumo():
-    return (pd.read_csv("../Data/csv/consumo_cliente.csv")
+    return(bd_consumo_energia_cliente = pd.read_csv("../Data/csv/bd_consumo_energia_cliente.csv"), bd_consumo_potencia_cliente = pd.read_csv("../Data/csv/bd_consumo_potencia_cliente.csv"))
+    
