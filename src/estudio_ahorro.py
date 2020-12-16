@@ -51,6 +51,16 @@ def ahorro_euros():
     ahorro =  importe_factura_año() - importe_nuevas_facturas().values[0]
     return(ahorro)
 
+# Función para sacar el ahorro en porcentaje
 def ahorro_porcentaje():
     porcentage_de_ahorro = (ahorro/actual_coste_anual_cliente)*100
     return(porcentage_de_ahorro)
+
+# Función para crear y guardar un pie_chart con el consumo del cliente.
+def pie_chart_consumo():
+consumo_p1_cliente = list(bd_consumo_energia_cliente[bd_consumo_energia_cliente.columns[-1]][0:3])
+labels = ['P1', 'P2', 'P3']
+sizes = [consumo_p1_cliente[0],consumo_p1_cliente[1], consumo_p1_cliente[2] ]
+plt.pie(sizes, labels=labels, shadow=True, autopct='%1.1f%%')
+plt.axis('equal')
+plt.savefig('../Data/Imagenes/pie_chart_consumo_cliente.png', bbox_inches='tight')

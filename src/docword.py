@@ -3,8 +3,19 @@ import os
 from docx.shared import Cm
 
 # Variables 
+titular_de_la_cuenta = [bd_cliente_estudio_de_ahorro_modelo["Titular_de_la_Cuenta"]
+direccion_suministro = [bd_cliente_estudio_de_ahorro_modelo["Dirección_completa"]
+cups = [bd_cliente_estudio_de_ahorro_modelo["Cups"]
+nueva_comercializadora = the_one_comercializadora["Comercializadora"]
+ahorro_percent = porcentage_de_ahorro[0]
+ahorro_euros = ahorro[0]
+records = [bd_cliente_estudio_de_ahorro_modelo["Precio_Energia_P1"], bd_cliente_estudio_de_ahorro_modelo["Precio_Energia_P2"], bd_cliente_estudio_de_ahorro_modelo["Precio_Energia_P3"]] # precio energia cliente
+records_2 = [bd_cliente_estudio_de_ahorro_modelo["Precio_Potencia_P1"], bd_cliente_estudio_de_ahorro_modelo["Precio_Potencia_P2"], bd_cliente_estudio_de_ahorro_modelo["Precio_Potencia_P3"]] # precio potencia cliente
+records_3 = [the_one_comercializadora["Precio_Energía_P1"],the_one_comercializadora["Precio_Energía_P2"],the_one_comercializadora["Precio_Energía_P3"]] # precio nuevo energia
+records_4 = [the_one_comercializadora["Precio_Potencia_P1"],the_one_comercializadora["Precio_Potencia_P2"],the_one_comercializadora["Precio_Potencia_P3"]] # precio nuevo potencia 
 
-# Pagina 1
+
+# Pagina 1 Word Doc
 
 doc =  docx.Document()
 
@@ -21,32 +32,32 @@ segundo_heading = doc.add_heading('Nuestra Propuesta', 1)
 #valor que insertar
 parag1_propuesta = doc.add_paragraph()
 parag1_propuesta.add_run('Estudio Preparado para: ')
-parag1_propuesta.add_run(a)
+parag1_propuesta.add_run(titular_de_la_cuenta)
 
 #valor que insertar
 parag2_propuesta = doc.add_paragraph()
 parag2_propuesta.add_run('Dirección del punto de suministro: ')
-parag2_propuesta.add_run(b)
+parag2_propuesta.add_run(direccion_suministro)
 
 #valor que insertar
 parag3_propuesta = doc.add_paragraph()
 parag3_propuesta.add_run('CUPS: ')
-parag3_propuesta.add_run(c)
+parag3_propuesta.add_run(cups)
 
 #valor que insertar
 parag9_propuesta = doc.add_paragraph()
 parag9_propuesta.add_run('Este año, la mejor comercializadora para ti es: ')
-parag9_propuesta.add_run(d).bold=True
+parag9_propuesta.add_run(nueva_comercializadora).bold=True
 
 #valor que insertar
 parag4_propuesta = doc.add_paragraph()
 parag4_propuesta.add_run('Ahorro : ')
-parag4_propuesta.add_run(e).bold=True
+parag4_propuesta.add_run(ahorro_percent).bold=True
 
 #valor que insertar
 parag5_propuesta = doc.add_paragraph()
 parag5_propuesta.add_run('Ahorro anual : ')
-parag5_propuesta.add_run(f).bold=True
+parag5_propuesta.add_run(ahorro_euros).bold=True
 
 #valor que insertar. 
 parag6_propuesta = doc.add_paragraph()
@@ -69,7 +80,7 @@ parag10_propuesta.alignment = 1
 parag10_propuesta.paragraph_format.line_spacing = 8
 parag10_propuesta.add_run('¡Apuntate a VIVOLT y nosotros nos ocupamos de siempre el mejor precio').bold=True
 
-# Pagina 2
+# Pagina 2 Word Doc
 doc.add_page_break()
 
 tercer_heading = doc.add_heading('Nuestra Propuesta Detallada', 1).bold=True
