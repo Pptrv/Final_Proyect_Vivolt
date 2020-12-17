@@ -27,9 +27,11 @@ from src.docword import generate_doc
 sys.path.append('configuration')
 
 # CONSTANTS
-BD_CLIENT_DATA = input("Nombre del archivo para realizar el estudio de ahorro: " )
+BD_CLIENT_DATA = input("Nombre del archivo para realizar el estudio de ahorro: " ) 
 BD_CLIENT_DATA_PATH = "Data/excel/" + BD_CLIENT_DATA + ".xlsx"
 BD_FIXED_PRICES_PATH = "Data/excel/BD_Precios_Fijos.xlsx"
+KWH_TO_C02_RATIO = 0.385
+C02_TO_TREE_RATIO = 0.4
 
 
 # CLIENT DATA DF
@@ -130,12 +132,12 @@ def importe_factura_año(client_data_df, client_energy_df, client_power_df):
                         (client_data_df["Precio_Energia_P4"] * float(client_energy_df.iloc[3][-1])) +
                         (client_data_df["Precio_Energia_P5"] * float(client_energy_df.iloc[4][-1])) +
                         (client_data_df["Precio_Energia_P6"] * float(client_energy_df.iloc[5][-1])) )
-    coste_potencia_actual =((client_data_df["Precio_Potencia_P1"] * float(client_power_df.iloc[0][-1])) +
-                        (client_data_df["Precio_Potencia_P2"] * float(client_power_df.iloc[1][-1])) +
-                        (client_data_df["Precio_Potencia_P3"] * float(client_power_df.iloc[2][-1])) +
-                        (client_data_df["Precio_Potencia_P4"] * float(client_power_df.iloc[3][-1])) +
-                        (client_data_df["Precio_Potencia_P5"] * float(client_power_df.iloc[4][-1])) +
-                        (client_data_df["Precio_Potencia_P6"] * float(client_power_df.iloc[5][-1])) ) * 365
+    coste_potencia_actual =((client_data_df["Precio_Potencia_P1"] * float(client_power_df.iloc[0][-1].replace(",", "."))) +
+                        (client_data_df["Precio_Potencia_P2"] * float(client_power_df.iloc[1][-1].replace(",", "."))) +
+                        (client_data_df["Precio_Potencia_P3"] * float(client_power_df.iloc[2][-1].replace(",", "."))) +
+                        (client_data_df["Precio_Potencia_P4"] * float(client_power_df.iloc[3][-1].replace(",", "."))) +
+                        (client_data_df["Precio_Potencia_P5"] * float(client_power_df.iloc[4][-1].replace(",", "."))) +
+                        (client_data_df["Precio_Potencia_P6"] * float(client_power_df.iloc[5][-1].replace(",", "."))) ) * 365
     coste_impuesto_energia = (coste_potencia_actual + coste_energía_actual)* 0.0511
     coste_contador = client_data_df["Precio_Contador"]*365
     coste_iva = (coste_energía_actual + coste_potencia_actual + coste_impuesto_energia + coste_contador) * 0.21
@@ -155,12 +157,12 @@ def importe_nuevas_facturas(client_data_df, fixed_prices_df, client_energy_df, c
                        (precios_vigentes_comercializadora_df['Precio_Energía_P6'] * float(client_energy_df.iloc[5][-1]))
                       )
 
-    coste_potencia_nuevo_comercializadoras = ((precios_vigentes_comercializadora_df['Precio_Potencia_P1'] * float(client_power_df.iloc[0][-1])) +
-                       (precios_vigentes_comercializadora_df['Precio_Potencia_P2'] * float(client_power_df.iloc[1][-1])) +
-                       (precios_vigentes_comercializadora_df['Precio_Potencia_P3'] * float(client_power_df.iloc[2][-1])) +
-                       (precios_vigentes_comercializadora_df['Precio_Potencia_P4'] * float(client_power_df.iloc[3][-1])) +
-                       (precios_vigentes_comercializadora_df['Precio_Potencia_P5'] * float(client_power_df.iloc[4][-1])) +
-                       (precios_vigentes_comercializadora_df['Precio_Potencia_P6'] * float(client_power_df.iloc[5][-1])) 
+    coste_potencia_nuevo_comercializadoras = ((precios_vigentes_comercializadora_df['Precio_Potencia_P1'] * float(client_power_df.iloc[0][-1].replace(",", "."))) +
+                       (precios_vigentes_comercializadora_df['Precio_Potencia_P2'] * float(client_power_df.iloc[1][-1].replace(",", "."))) +
+                       (precios_vigentes_comercializadora_df['Precio_Potencia_P3'] * float(client_power_df.iloc[2][-1].replace(",", "."))) +
+                       (precios_vigentes_comercializadora_df['Precio_Potencia_P4'] * float(client_power_df.iloc[3][-1].replace(",", "."))) +
+                       (precios_vigentes_comercializadora_df['Precio_Potencia_P5'] * float(client_power_df.iloc[4][-1].replace(",", "."))) +
+                       (precios_vigentes_comercializadora_df['Precio_Potencia_P6'] * float(client_power_df.iloc[5][-1].replace(",", "."))) 
                       )* 365
     coste_impuesto_energia_nuevo = (coste_energia_nuevo_comercializadoras + coste_potencia_nuevo_comercializadoras)* 0.0511
     precios_vigentes_comercializadora_df["precio_contador"] = client_data_df["Precio_Contador"].values[0]*365
@@ -187,8 +189,9 @@ def get_saving_data_points(client_data_df, fixed_prices_df, client_energy_df, cl
     actual_coste_anual_cliente = importe_factura_año(client_data_df, client_energy_df, client_power_df)
     the_one_price, the_one_comercializadora = importe_nuevas_facturas(client_data_df, fixed_prices_df, client_energy_df, client_power_df)
     ahorro = actual_coste_anual_cliente - the_one_price.values[0]
-
     ahorro_porcentaje = (ahorro/actual_coste_anual_cliente)*100
+    emisiones = sum([int(i) for i in list(client_energy_df[client_energy_df.columns[-1]][0:6])]) * KWH_TO_C02_RATIO
+    arboles =int(emisiones * C02_TO_TREE_RATIO)
 
     return {
         "actual_coste_anual_cliente": actual_coste_anual_cliente,
@@ -196,6 +199,8 @@ def get_saving_data_points(client_data_df, fixed_prices_df, client_energy_df, cl
         "the_one_comercializadora": the_one_comercializadora,
         "ahorro": ahorro,
         "ahorro_porcentaje": ahorro_porcentaje,
+        "emisiones": emisiones, 
+        "arboles": arboles
     }
 
 
@@ -223,3 +228,7 @@ def main():
     generate_doc(doc_data)
 
 main()
+
+
+
+

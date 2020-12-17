@@ -3,19 +3,21 @@ import os
 from docx.shared import Cm
 from docx2pdf import convert
 
+# UTILS
+def round_currency(value, dp = 2):
+    return f"{float(value):.{dp}f}"
+
 # GENERATE DOC
 def generate_doc(doc_data):
     the_one_comercializadora = doc_data["the_one_comercializadora"]
     nueva_comercializadora = the_one_comercializadora["Comercializadora"]
     records_3 = [the_one_comercializadora["Precio_Energía_P1"],the_one_comercializadora["Precio_Energía_P2"],the_one_comercializadora["Precio_Energía_P3"]] # precio nuevo energia
     records_4 = [the_one_comercializadora["Precio_Potencia_P1"],the_one_comercializadora["Precio_Potencia_P2"],the_one_comercializadora["Precio_Potencia_P3"]] # precio nuevo potencia 
-    bd_consumo_energia_cliente = 
-    emisiones = (list(bd_consumo_energia_cliente[bd_consumo_energia_cliente.columns[-1]][0:3]))*0.385
-    arboles = (emisiones/0.4)
+    
 
     doc =  docx.Document()
 
-    vivolt = doc.add_picture('Data/Imagenes/VIVOLT logo 2.png', width=Cm(15))
+    vivolt = doc.add_picture('Data/Imagenes/VIVOLT logo 2.png', width=Cm(6))
     vivolt.alignment = 1
 
     primer_heading = doc.add_heading('Estudio de Ahorro', 0).bold=True
@@ -48,33 +50,34 @@ def generate_doc(doc_data):
     #valor que insertar
     parag4_propuesta = doc.add_paragraph()
     parag4_propuesta.add_run('Ahorro : ')
-    parag4_propuesta.add_run(str(doc_data["ahorro_porcentaje"])).bold=True
+    parag4_propuesta.add_run(round_currency(doc_data["ahorro_porcentaje"])).bold=True
     parag4_propuesta.add_run(" %")
 
     #valor que insertar
     parag5_propuesta = doc.add_paragraph()
     parag5_propuesta.add_run('Ahorro anual : ')
-    parag5_propuesta.add_run(str(doc_data["ahorro"])).bold=True
-    parag4_propuesta.add_run(" €")
+    parag5_propuesta.add_run(round_currency(doc_data["ahorro"])).bold=True
+    parag5_propuesta.add_run(" €")
 
     #valor que insertar. 
     parag6_propuesta = doc.add_paragraph()
     parag6_propuesta.add_run('Emisiones de CO2/kg ahorradas : ')
-    parag6_propuesta.add_run(emisiones).bold=True
+    parag6_propuesta.add_run(str(doc_data["emisiones"])).bold=True
 
     #valor que insertar
     parag7_propuesta = doc.add_paragraph()
-    parag7_propuesta.add_run('El ahorro de tus emisiones de CO2 equivale a plantar : ')
-    parag7_propuesta.add_run(arboles).bold=True
-    parag7_propuesta.add_run('arboles').bold=True
+    parag7_propuesta.add_run('El ahorro de tus emisiones de CO2/kg equivale a plantar : ')
+    parag7_propuesta.add_run(str(doc_data["arboles"])).bold=True
+    parag7_propuesta.add_run(" arboles").bold=True
 
-    parag8_propuesta = doc.add_paragraph()
-    parag8_propuesta.add_run('Este estudio personalizado optimiza tus condiciones tarifarias, analizando tus patrones de consumo, contrastando tus condiciones actuales contra la oferta del mercado y así poder ajustarlas a las que mas te convengan.')
-    
-    parag10_propuesta = doc.add_paragraph()
-    parag10_propuesta.alignment = 1
-    parag10_propuesta.paragraph_format.line_spacing = 8
-    parag10_propuesta.add_run('¡Apuntate a VIVOLT y nosotros nos ocupamos de siempre el mejor precio').bold=True
+    decimo_heading = doc.add_heading('Tu consumo se distribuye de la siguiente manera:', 1).bold=True
+
+    pie_chart = doc.add_picture('Data/Imagenes/pie_chart_consumo_cliente.png', width=Cm(10))
+    pie_chart.alignment = 1
+
+    parag_piechart_propuesta = doc.add_paragraph()
+    parag_piechart_propuesta.add_run('P1, P2 y P3 representan franjas horarias en las que consumes energía. Estas franjas horarias varían segun invierno o verano')    
+
 
     # Pagina 2 Word Doc
     #doc.add_page_break()
@@ -85,77 +88,79 @@ def generate_doc(doc_data):
 
     quinto_heading = doc.add_heading('Precio Energía:', 3).bold=True
 
-    antes_energia_table = doc.add_table(rows=1, cols=3)
+    antes_energia_table = doc.add_table(rows=2, cols=3)
     antes_energia_table.style= 'Medium Shading 1'
     hdr_Cells = antes_energia_table.rows[0].cells
     hdr_Cells[0].text = 'P1'
     hdr_Cells[1].text = 'P2'
     hdr_Cells[2].text = 'P3'
     
+    r1_Cells = antes_energia_table.rows[1].cells
     r1_index = 0
     for r1 in doc_data["records"]:
-        row_Cells = antes_energia_table.add_row().cells
-        row_Cells[r1_index].text = str(r1)
+        r1_Cells[r1_index].text = str(r1.values[0])
         r1_index += 1
 
     sexto_heading = doc.add_heading('Precio Potencia:', 3).bold=True
 
-    antes_potencia_table = doc.add_table(rows=1, cols=3)
+    antes_potencia_table = doc.add_table(rows=2, cols=3)
     antes_potencia_table.style= 'Medium Shading 1'
     hdr_Cells = antes_potencia_table.rows[0].cells
     hdr_Cells[0].text = 'P1'
     hdr_Cells[1].text = 'P2'
     hdr_Cells[2].text = 'P3'
 
+    r2_Cells = antes_potencia_table.rows[1].cells
     r2_index = 0
     for r2 in doc_data["records_2"]:
-        row_Cells = antes_energia_table.add_row().cells
-        row_Cells[r2_index].text = str(r2)
+        r2_Cells[r2_index].text = str(r2.values[0])
         r2_index += 1
+
+    antes_tipo_energia = doc.add_picture('Data/Imagenes/antes_energia_normal.png', width=Cm(8))
+    antes_tipo_energia.alignment = 1
 
     septimo_heading = doc.add_heading('Ahora puedes tener:', 2).bold=True
 
     octavo_heading = doc.add_heading('Precio Energía:', 3).bold=True
 
-    nueva_energia_table = doc.add_table(rows=1, cols=3)
+    nueva_energia_table = doc.add_table(rows=2, cols=3)
     nueva_energia_table.style= 'Light List Accent 6'
     hdr_Cells = nueva_energia_table.rows[0].cells
     hdr_Cells[0].text = 'P1'
     hdr_Cells[1].text = 'P2'
     hdr_Cells[2].text = 'P3'
 
-
+    r3_Cells = nueva_energia_table.rows[1].cells
     r3_index = 0
     for r3 in records_3:
-        row_Cells = nueva_energia_table.add_row().cells
-        row_Cells[r3_index].text = str(r3)
+        r3_Cells[r3_index].text = str(r3.values[0])
         r3_index += 1
 
     noveno_heading = doc.add_heading('Precio Potencia:', 3).bold=True
 
-    nueva_potencia_table = doc.add_table(rows=1, cols=3)
+    nueva_potencia_table = doc.add_table(rows=2, cols=3)
     nueva_potencia_table.style= 'Light List Accent 6'
     hdr_Cells = nueva_potencia_table.rows[0].cells
     hdr_Cells[0].text = 'P1'
     hdr_Cells[1].text = 'P2'
     hdr_Cells[2].text = 'P3'
 
+    r4_Cells = nueva_potencia_table.rows[1].cells
     r4_index = 0
-    for r4 in records_3:
-        row_Cells = nueva_potencia_table.add_row().cells
-        row_Cells[r4_index].text = str(r4)
+    for r4 in records_4:
+        r4_Cells[r4_index].text = str(r4.values[0])
         r4_index += 1
 
-    decimo_heading = doc.add_heading('Tu consumo se distribuye de la siguiente manera:', 1).bold=True
+    vivolt_tipo_energia = doc.add_picture('Data/Imagenes/ahora_energia_renovable.png', width=Cm(8))
+    vivolt_tipo_energia.alignment = 1
 
-    pie_chart = doc.add_picture('Data/Imagenes/pie_chart_consumo_cliente.png', width=Cm(10))
-    pie_chart.alignment = 1
-
-    parag_piechart_propuesta = doc.add_paragraph()
-    parag_piechart_propuesta.add_run('P1, P2 y P3 representan franjas horarias en las que consumes energía. Estas franjas horarias varían segun invierno o verano, aunque podríamos decir que:')
-
-    parag_p1_propuesta = doc.add_paragraph()
-    parag_p1_propuesta.add_run('P1:Tarde               P2: Mañana               P3:Noche').bold=True
+    parag8_propuesta = doc.add_paragraph()
+    parag8_propuesta.add_run('Este estudio personalizado optimiza tus condiciones tarifarias, analizando tus patrones de consumo, contrastando tus condiciones actuales contra la oferta del mercado y así poder ajustarlas a las que mas te convengan.')
+    
+    parag10_propuesta = doc.add_paragraph()
+    parag10_propuesta.alignment = 1
+    parag10_propuesta.paragraph_format.line_spacing = 8
+    parag10_propuesta.add_run('¡Apuntate a VIVOLT y nosotros nos ocupamos de siempre el mejor precio').bold=True
 
     doc.save("estudio_ahorro.docx")
     
