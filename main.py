@@ -30,8 +30,8 @@ sys.path.append('configuration')
 BD_CLIENT_DATA = input("Nombre del archivo para realizar el estudio de ahorro: " ) 
 BD_CLIENT_DATA_PATH = "Data/excel/" + BD_CLIENT_DATA + ".xlsx"
 BD_FIXED_PRICES_PATH = "Data/excel/BD_Precios_Fijos.xlsx"
-KWH_TO_C02_RATIO = 0.385
-C02_TO_TREE_RATIO = 0.4
+KWH_TO_C02_RATIO = 0.150
+C02_TO_TREE_RATIO = 1250
 
 
 # CLIENT DATA DF
@@ -192,7 +192,7 @@ def get_saving_data_points(client_data_df, fixed_prices_df, client_energy_df, cl
     ahorro = actual_coste_anual_cliente - the_one_price.values[0]
     ahorro_porcentaje = (ahorro/actual_coste_anual_cliente)*100
     emisiones = sum([int(i) for i in list(client_energy_df[client_energy_df.columns[-1]][0:6])]) * KWH_TO_C02_RATIO
-    arboles =int(emisiones * C02_TO_TREE_RATIO)
+    arboles =int(emisiones / C02_TO_TREE_RATIO)
 
     return {
         "actual_coste_anual_cliente": actual_coste_anual_cliente,
