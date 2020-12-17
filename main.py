@@ -17,6 +17,7 @@ import seaborn as sns
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep
+from docx2pdf import convert
 
 # Project imports
 from configuration.config import login_data, client_cups, url
@@ -26,7 +27,8 @@ from src.docword import generate_doc
 sys.path.append('configuration')
 
 # CONSTANTS
-BD_CLIENT_DATA_PATH = "Data/excel/BD_Clientes_Estudio_de_Ahorro.xlsx"
+BD_CLIENT_DATA = input("Nombre del archivo para realizar el estudio de ahorro: " )
+BD_CLIENT_DATA_PATH = "Data/excel/" + BD_CLIENT_DATA + ".xlsx"
 BD_FIXED_PRICES_PATH = "Data/excel/BD_Precios_Fijos.xlsx"
 
 

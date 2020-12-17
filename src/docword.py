@@ -1,6 +1,7 @@
 import docx
 import os
 from docx.shared import Cm
+from docx2pdf import convert
 
 # GENERATE DOC
 def generate_doc(doc_data):
@@ -8,6 +9,9 @@ def generate_doc(doc_data):
     nueva_comercializadora = the_one_comercializadora["Comercializadora"]
     records_3 = [the_one_comercializadora["Precio_Energía_P1"],the_one_comercializadora["Precio_Energía_P2"],the_one_comercializadora["Precio_Energía_P3"]] # precio nuevo energia
     records_4 = [the_one_comercializadora["Precio_Potencia_P1"],the_one_comercializadora["Precio_Potencia_P2"],the_one_comercializadora["Precio_Potencia_P3"]] # precio nuevo potencia 
+    bd_consumo_energia_cliente = 
+    emisiones = (list(bd_consumo_energia_cliente[bd_consumo_energia_cliente.columns[-1]][0:3]))*0.385
+    arboles = (emisiones/0.4)
 
     doc =  docx.Document()
 
@@ -24,17 +28,17 @@ def generate_doc(doc_data):
     #valor que insertar
     parag1_propuesta = doc.add_paragraph()
     parag1_propuesta.add_run('Estudio Preparado para: ')
-    parag1_propuesta.add_run(doc_data["titular_de_la_cuenta"].values[0])
+    parag1_propuesta.add_run(doc_data["titular_de_la_cuenta"].values[0]).bold=True
 
     #valor que insertar
     parag2_propuesta = doc.add_paragraph()
     parag2_propuesta.add_run('Dirección del punto de suministro: ')
-    parag2_propuesta.add_run(doc_data["direccion_suministro"].values[0])
+    parag2_propuesta.add_run(doc_data["direccion_suministro"].values[0]).bold=True
 
     #valor que insertar
     parag3_propuesta = doc.add_paragraph()
     parag3_propuesta.add_run('CUPS: ')
-    parag3_propuesta.add_run(doc_data["cups"].values[0])
+    parag3_propuesta.add_run(doc_data["cups"].values[0]).bold=True
 
     #valor que insertar
     parag9_propuesta = doc.add_paragraph()
@@ -45,35 +49,35 @@ def generate_doc(doc_data):
     parag4_propuesta = doc.add_paragraph()
     parag4_propuesta.add_run('Ahorro : ')
     parag4_propuesta.add_run(str(doc_data["ahorro_porcentaje"])).bold=True
+    parag4_propuesta.add_run(" %")
 
     #valor que insertar
     parag5_propuesta = doc.add_paragraph()
     parag5_propuesta.add_run('Ahorro anual : ')
     parag5_propuesta.add_run(str(doc_data["ahorro"])).bold=True
+    parag4_propuesta.add_run(" €")
 
     #valor que insertar. 
     parag6_propuesta = doc.add_paragraph()
     parag6_propuesta.add_run('Emisiones de CO2/kg ahorradas : ')
-    parag6_propuesta.add_run('emisiones(multiplicar 1kwh por 0,385)').bold=True
+    parag6_propuesta.add_run(emisiones).bold=True
 
     #valor que insertar
     parag7_propuesta = doc.add_paragraph()
     parag7_propuesta.add_run('El ahorro de tus emisiones de CO2 equivale a plantar : ')
-    parag7_propuesta.add_run('arbol= 0.4 CO2/kg, dividir emisiones por arbol').bold=True
+    parag7_propuesta.add_run(arboles).bold=True
     parag7_propuesta.add_run('arboles').bold=True
 
     parag8_propuesta = doc.add_paragraph()
-    parag8_propuesta.add_run('Este ')
-    parag8_propuesta.add_run('estudio personalizado ').bold=True
-    parag8_propuesta.add_run('optimiza tus condiciones tarifarias, analizando tus patrones de consumo, contrastando tus condiciones actuales contra la oferta del mercado y así poder ajustarlas a las que mas te convengan.')
-
+    parag8_propuesta.add_run('Este estudio personalizado optimiza tus condiciones tarifarias, analizando tus patrones de consumo, contrastando tus condiciones actuales contra la oferta del mercado y así poder ajustarlas a las que mas te convengan.')
+    
     parag10_propuesta = doc.add_paragraph()
     parag10_propuesta.alignment = 1
     parag10_propuesta.paragraph_format.line_spacing = 8
     parag10_propuesta.add_run('¡Apuntate a VIVOLT y nosotros nos ocupamos de siempre el mejor precio').bold=True
 
     # Pagina 2 Word Doc
-    doc.add_page_break()
+    #doc.add_page_break()
 
     tercer_heading = doc.add_heading('Nuestra Propuesta Detallada', 1).bold=True
 
@@ -151,24 +155,16 @@ def generate_doc(doc_data):
     parag_piechart_propuesta.add_run('P1, P2 y P3 representan franjas horarias en las que consumes energía. Estas franjas horarias varían segun invierno o verano, aunque podríamos decir que:')
 
     parag_p1_propuesta = doc.add_paragraph()
-    parag_p1_propuesta.add_run('P1: ').bold=True
-    parag_p1_propuesta.add_run('Tarde')
-
-    parag_p2_propuesta = doc.add_paragraph()
-    parag_p2_propuesta.add_run('P2: ').bold=True
-    parag_p2_propuesta.add_run('Mañana')
-
-    parag_p3_propuesta = doc.add_paragraph()
-    parag_p3_propuesta.add_run('P3: ').bold=True
-    parag_p3_propuesta.add_run('Noche')
+    parag_p1_propuesta.add_run('P1:Tarde               P2: Mañana               P3:Noche').bold=True
 
     doc.save("estudio_ahorro.docx")
+    
+    convert("estudio_ahorro.docx")
+    convert("estudio_ahorro.docx", "estudio_ahorro.pdf")
+    
 
-    os.system("start estudio_ahorro.docx")
+    os.system("open estudio_ahorro.pdf")
 
-    print('- - - - - -')
-    print('DONE')
-    print('- - - - - -')
 
 
 """
