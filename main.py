@@ -111,6 +111,7 @@ def import_ConsumoCliente():
     list_of_files = glob.glob('/Users/pptrv/Downloads/*.csv')
     latest_file = max(list_of_files, key=os.path.getctime)
     client_general_df = pd.read_csv(latest_file, sep=";;", error_bad_lines = False)
+    #client_general_df = pd.read_csv('/Users/pptrv/Desktop/demo_SIPS_637438388764971942.csv', sep=";;", error_bad_lines = False)
     client_power_df = client_general_df.iloc[1:7]
     client_power_df.columns = ['a', 'b'] 
     client_power_df[['Potencia','kWp']] = client_power_df['b'].str.split(";",expand=True)
