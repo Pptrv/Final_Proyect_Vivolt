@@ -62,7 +62,7 @@ def generate_doc(doc_data):
     #valor que insertar. 
     parag6_propuesta = doc.add_paragraph()
     parag6_propuesta.add_run('Emisiones de CO2/kg ahorradas : ')
-    parag6_propuesta.add_run(str(doc_data["emisiones"])).bold=True
+    parag6_propuesta.add_run(str(round_currency(doc_data["emisiones"]))).bold=True
 
     #valor que insertar
     parag7_propuesta = doc.add_paragraph()
